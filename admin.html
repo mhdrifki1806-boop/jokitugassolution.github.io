@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Kelola Member Joki Tugas Solution</title>
+    <link rel="stylesheet" href="admin-style.css">
+</head>
+<body>
+    <!-- Login Admin -->
+    <div id="loginSection" class="login-container">
+        <div class="login-box">
+            <h1>🔐 Login Admin</h1>
+            <p>Joki Tugas Solution - Panel Manajemen Member</p>
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label>Username Admin</label>
+                    <input type="text" id="adminUsername" placeholder="Masukkan username" required>
+                </div>
+                <div class="form-group">
+                    <label>Password Admin</label>
+                    <input type="password" id="adminPassword" placeholder="Masukkan password" required>
+                </div>
+                <button type="submit" class="btn-login">Masuk</button>
+                <p class="hint" style="text-align: center; margin-top: 20px; color: #999;">
+                    Demo: username: <strong>admin</strong>, password: <strong>admin123</strong>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="admin-dashboard hidden">
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="header-content">
+                <h1>🎓 Joki Tugas Solution - Admin Panel</h1>
+                <div class="user-info">
+                    <span id="adminName">Admin</span>
+                    <button class="btn-logout" onclick="logoutAdmin()">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar Navigation -->
+        <div class="admin-container">
+            <aside class="sidebar">
+                <nav class="nav-menu">
+                    <ul>
+                        <li><a href="#" onclick="showSection('dashboard')" class="nav-item active">📊 Dashboard</a></li>
+                        <li><a href="#" onclick="showSection('daftar-member')" class="nav-item">👥 Daftar Member</a></li>
+                        <li><a href="#" onclick="showSection('tambah-member')" class="nav-item">➕ Tambah Member Baru</a></li>
+                        <li><a href="#" onclick="showSection('statistik')" class="nav-item">📈 Statistik</a></li>
+                        <li><a href="#" onclick="showSection('pengaturan')" class="nav-item">⚙️ Pengaturan</a></li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- Dashboard Section -->
+                <section id="dashboard" class="content-section active">
+                    <h2>Dashboard</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>Total Member</h3>
+                            <p class="stat-number" id="totalMember">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Member Aktif</h3>
+                            <p class="stat-number" id="activeMember">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Member Baru (Bulan Ini)</h3>
+                            <p class="stat-number" id="newMember">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Pesanan Menunggu</h3>
+                            <p class="stat-number" id="pendingOrders">0</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Daftar Member Section -->
+                <section id="daftar-member" class="content-section">
+                    <h2>Daftar Member</h2>
+                    
+                    <div class="section-toolbar">
+                        <input type="text" id="searchMember" placeholder="Cari member..." class="search-box">
+                        <select id="filterStatus" class="filter-select">
+                            <option value="">Semua Status</option>
+                            <option value="aktif">Aktif</option>
+                            <option value="nonaktif">Non-Aktif</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="member-table">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Nama</th>
+                                    <th>Email</th>
+                                    <th>No. WhatsApp</th>
+                                    <th>Tanggal Daftar</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="memberTableBody">
+                                <!-- Data member akan ditampilkan di sini -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Tambah Member Section -->
+                <section id="tambah-member" class="content-section">
+                    <h2>Tambah Member Baru</h2>
+                    <form id="addMemberForm" class="form-container">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nama Lengkap *</label>
+                                <input type="text" id="memberName" placeholder="Masukkan nama lengkap" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email *</label>
+                                <input type="email" id="memberEmail" placeholder="Masukkan email" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>No. WhatsApp *</label>
+                                <input type="tel" id="memberPhone" placeholder="Masukkan nomor WhatsApp" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Password *</label>
+                                <input type="password" id="memberPassword" placeholder="Masukkan password" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Paket Member</label>
+                                <select id="memberPackage">
+                                    <option value="basic">Basic - Rp 50.000</option>
+                                    <option value="premium">Premium - Rp 150.000</option>
+                                    <option value="express">Express - Rp 250.000</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Status</label>
+                                <select id="memberStatus">
+                                    <option value="aktif">Aktif</option>
+                                    <option value="nonaktif">Non-Aktif</option>
+                                    <option value="pending">Pending</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Catatan</label>
+                            <textarea id="memberNotes" placeholder="Catatan tambahan (opsional)" rows="4"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn-primary">Tambah Member</button>
+                    </form>
+                </section>
+
+                <!-- Statistik Section -->
+                <section id="statistik" class="content-section">
+                    <h2>Statistik Member</h2>
+                    <div class="stats-container">
+                        <div class="chart-box">
+                            <h3>Distribusi Status Member</h3>
+                            <div id="statusChart" class="chart-area">
+                                <p>Aktif: <strong id="statAktif">0</strong></p>
+                                <p>Non-Aktif: <strong id="statNonaktif">0</strong></p>
+                                <p>Pending: <strong id="statPending">0</strong></p>
+                            </div>
+                        </div>
+                        <div class="chart-box">
+                            <h3>Distribusi Paket Member</h3>
+                            <div id="packageChart" class="chart-area">
+                                <p>Basic: <strong id="statBasic">0</strong></p>
+                                <p>Premium: <strong id="statPremium">0</strong></p>
+                                <p>Express: <strong id="statExpress">0</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Pengaturan Section -->
+                <section id="pengaturan" class="content-section">
+                    <h2>Pengaturan</h2>
+                    <div class="settings-container">
+                        <div class="setting-box">
+                            <h3>Ubah Password Admin</h3>
+                            <form id="changePasswordForm">
+                                <div class="form-group">
+                                    <label>Password Lama</label>
+                                    <input type="password" id="oldPassword" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Password Baru</label>
+                                    <input type="password" id="newPassword" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Konfirmasi Password Baru</label>
+                                    <input type="password" id="confirmNewPassword" required>
+                                </div>
+                                <button type="submit" class="btn-primary">Ubah Password</button>
+                            </form>
+                        </div>
+
+                        <div class="setting-box">
+                            <h3>Pengaturan Sistem</h3>
+                            <div class="setting-item">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="enableAutoApprove" checked>
+                                    Persetujuan Otomatis untuk Member Baru
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="enableNotifications" checked>
+                                    Aktifkan Notifikasi Email
+                                </label>
+                            </div>
+                            <button class="btn-primary" onclick="saveSettings()">Simpan Pengaturan</button>
+                        </div>
+
+                        <div class="setting-box">
+                            <h3>Backup & Export</h3>
+                            <p>Backup data member secara otomatis dilakukan setiap hari.</p>
+                            <button class="btn-primary" onclick="exportData()">Export Data Member (CSV)</button>
+                            <button class="btn-secondary" onclick="backupData()">Backup Sekarang</button>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal Edit Member -->
+    <div id="editMemberModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditModal()">&times;</span>
+            <h2>Edit Member</h2>
+            <form id="editMemberForm" class="form-container">
+                <input type="hidden" id="editMemberId">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nama Lengkap</label>
+                        <input type="text" id="editMemberName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="editMemberEmail" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>No. WhatsApp</label>
+                        <input type="tel" id="editMemberPhone" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="editMemberStatus">
+                            <option value="aktif">Aktif</option>
+                            <option value="nonaktif">Non-Aktif</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Catatan</label>
+                    <textarea id="editMemberNotes" rows="3"></textarea>
+                </div>
+
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-primary">Simpan Perubahan</button>
+                    <button type="button" class="btn-secondary" onclick="closeEditModal()">Batal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Konfirmasi Hapus -->
+    <div id="deleteConfirmModal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Konfirmasi Hapus Member</h2>
+            <p>Apakah Anda yakin ingin menghapus member <strong id="deleteConfirmName"></strong>?</p>
+            <p style="color: #ef4444; font-weight: bold;">Tindakan ini tidak dapat dibatalkan!</p>
+            <div class="modal-buttons">
+                <button class="btn-danger" onclick="confirmDelete()">Hapus</button>
+                <button class="btn-secondary" onclick="closeDeleteModal()">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin-script.js"></script>
+</body>
+</html>
